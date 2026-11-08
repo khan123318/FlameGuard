@@ -1,0 +1,13 @@
+source_id,source_title,organization,source_url,publication_date,document_type,related_experiment,access_status
+S001,Detailed Results from the Flame Extinguishment Experiment (FLEX) NASA/TP-2015-216046,NASA Glenn,https://ntrs.nasa.gov/citations/20150023456,2015,Technical publication,FLEX,Available
+S002,BASS-II Summary Report NASA/TM-20210011385,NASA,https://ntrs.nasa.gov/citations/20210011385,2021,Technical memorandum,BASS-II,Available
+S003,Burning Rate Emulator (BRE),NASA Science,https://science.nasa.gov/biological-physical/investigations/bre/,not stated,Web page,ACME-BRE,Available
+S004,Advanced Combustion via Microgravity Experiments (ACME),NASA Science,https://science.nasa.gov/biological-physical/investigations/acme/,not stated,Web page,ACME,Available
+S005,Studying Combustion and Fire Safety,NASA,https://www.nasa.gov/missions/station/iss-research/studying-combustion-and-fire-safety/,not stated,Web article,BASS and ACME-BRE,Available
+S006,Burning and Suppression of Solids (BASS) fact sheet,NASA,https://www.nasa.gov/wp-content/uploads/2025/07/burning-and-suppression-of-solids-bass.pdf,2025,Fact sheet,BASS and BASS-II,Available
+S007,Cool Flames Created During a First for ISS Research,NASA,https://www.nasa.gov/missions/station/cool-flames-created-during-a-first-for-international-space-station-research/,2021,Web article,FLEX follow-on (gas fuels),Available
+S008,Cool-flame extinction during n-alkane droplet combustion in microgravity (Nayagam et al.),NASA NTRS,https://ntrs.nasa.gov/api/citations/20140006750/downloads/20140006750.pdf,2014,Conference paper,FLEX,Available
+S009,Fire and Flame Research in the ISS Combustion Integrated Rack (Stocker),NASA NTRS,https://ntrs.nasa.gov/api/citations/20250001364/downloads/CIR%20USNCM%20poster%20abstract%2020250203.pdf,2025,Conference abstract,"CIR (FLEX, ACME, SoFIE)",Available
+S010,Solid Fuel Ignition and Extinction (SoFIE),NASA Science,https://science.nasa.gov/biological-physical/investigations/sofie,not stated,Web page,SoFIE,Available
+S011,"Combustion Science (Physical Sciences Program, NASA Glenn)",NASA,https://www.nasa.gov/glenn/glenn-expertise-space-exploration/physical-sciences-program/combustion-science,not stated,Web page,"CIR (FLEX, ACME, SoFIE)",Available
+S012,Solid Fuel Ignition and Extinction (SoFIE) Project on ISS,NASA NTRS,https://ntrs.nasa.gov/citations/20200000361,2019,Presentation,SoFIE,Available
