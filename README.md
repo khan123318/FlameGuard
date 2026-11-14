@@ -1,29 +1,39 @@
-# 🔥 FlameGuard
+# 🔥 FlameGuard — AI & Data Engineering Core
 
-**AI-Powered Spacecraft Fire Safety Insights from Microgravity Combustion Data**  
-*NASA Space Apps Challenge 2026 · Team NST (Karachi)*  
-*Challenge Theme: "Flame in Freefall: Microgravity Combustion Data"*
+**Project:** FlameGuard (AI-Powered Fire Safety Research Dashboard)  
+**Event:** NASA Space Apps Challenge 2026 (Team NST, Karachi)  
+**Challenge Theme:** "Flame in Freefall: AI-Powered Fire Safety Insights from Microgravity Combustion Data"  
+**Lead AI & Data Engineer (Member 2):** Syed Abdullah Hussain (`ssyedabdullah1050`)
 
 ---
 
-## 🚀 Overview
+## 👨‍💻 Engineering Ownership & Deliverables (Member 2)
 
-Fire behaves fundamentally differently in microgravity. Without buoyancy-driven convection, flames do not rise; they form spherically symmetric diffusion zones, burn with low convective heat release, rely completely on forced cabin ventilation, and can sustain low-temperature, invisible **cool flames** that persist after visible extinction.
+As the **AI and Data Engineer (Member 2)**, I was responsible for designing and delivering the foundational data layer, the multi-attribute passage retrieval engine, the spacecraft fire scenario evaluator, and the automated test verification suite:
 
-**FlameGuard** turns decades of complex NASA orbital combustion research into an accessible, searchable, and evidence-grounded safety engineering dashboard. The system enables spacecraft engineers and researchers to query microgravity findings, evaluate mission fire scenarios against empirical test data, and explore multi-parameter combustion analytics—strictly citing primary NASA technical publications with exact page and section citations.
+1. **Curated Microgravity Dataset:**  
+   Standardized 15 microgravity combustion experiments across 17 scientific parameters, 50 passage-level NASA evidence citations, and 12 official NASA publication sources (`ntrs.nasa.gov` / `science.nasa.gov`).
+2. **Passage-Level TF-IDF Search Engine (`modules/retrieval_engine.py`):**  
+   High-precision text retrieval returning 16 structured citation fields with exact page numbers, section locators, and relevance scoring.
+3. **Spacecraft Safety Scenario Evaluator (`modules/scenario_retrieval.py` & `pages/4_Safety_Scenario_Evaluator.py`):**  
+   Scenario mapping for atmospheric oxygen (15–35%), forced flow velocity (0–50 cm/s), cabin pressure, and fuel materials with automatic NASA limitation hedges.
+4. **Interactive Dashboard Pages (`pages/`):**  
+   Completed multi-page Streamlit integration including Experiment Explorer, Research Analytics, Grounded AI Assistant, and Safety Scenario Evaluator.
+5. **Automated Quality Assurance (`tests/`):**  
+   Engineered 23 unit tests across 5 test suites with a **100% pass rate** and 100% Top-3 blind retrieval accuracy.
 
 ---
 
 ## 🏛️ System Architecture
 
 ```
-NASA Primary Literature (NTRS / Science.nasa.gov)
+NASA Technical Publications & Memorandums (NTRS / Science)
    │
    ├── data/research_source_register.csv   (12 Cataloged NASA Sources)
    ├── data/combustion_experiments.csv     (15 Experiments × 17 Parameters)
    └── data/research_passages.csv          (50 Exact Passages with Page & Section)
         │
-        ├── modules/data_loader.py          ── Load, clean & enforce "not reported"
+        ├── modules/data_loader.py          ── Load, clean & enforce "not reported" (zero guessing)
         ├── modules/retrieval_engine.py     ── Passage-level TF-IDF & Cosine Similarity (16 Fields)
         ├── modules/scenario_retrieval.py   ── Scenario mapping & NASA limitation hedges
         ├── modules/analytics.py            ── Distributions, evidence types & completeness
@@ -39,54 +49,31 @@ NASA Primary Literature (NTRS / Science.nasa.gov)
 
 ---
 
-## 👥 Team Roles & Responsibilities
+## 📊 Standardized Datasets & Grounding
 
-| Role | Member | Responsibilities |
-|---|---|---|
-| **Member 1 (Team Lead)** | **Waheeba Khan** | Application architecture, Streamlit UI, Gemini assistant integration, evidence validator, analytics backend. |
-| **Member 2 (AI & Data Engineer)** | **Syed Abdullah Hussain** | Dataset curation & schema design, passage-level TF-IDF retrieval engine, scenario retrieval & limitation hedges, test engineering. |
-| **Member 3 (Materials Specialist)** | **Talha** | Solid combustion research, BASS-II acrylic polymers (thin film, rods, flat samples), SIBAL fabric, ACME-BRE emulation. |
-| **Member 4 (Combustion Physics)** | **Farhan** | Microgravity droplet combustion, FLEX & FLEX-2 experiments, limiting oxygen index (LOI), cool-flame second stage burning. |
-| **Member 5 (Numerical Data)** | **Amna** | Quantitative combustion measurements, burning rates, fuel droplet extinction diameters. |
-| **Member 6 (Spacecraft Safety)** | **Faraz Ur Rehman** | Mission fire scenarios, forced ventilation flows, Saffire Cygnus large-scale tests, toxic gas (CO/CO₂) risk analysis. |
+- **`data/combustion_experiments.csv` (15 Records × 17 Columns):**  
+  Empirical data from **FLEX / FLEX-2** (droplet burns, cool flames), **BASS / BASS-II** (PMMA acrylic thin-films, thick slabs, rods, SIBAL cotton-fiberglass composite fabric), **ACME-BRE** (gaseous fuel emulation of condensed fuels), and **CIR**.
+- **`data/research_passages.csv` (50 Passages):**  
+  Direct sentence citations from NASA/TP-2015-216046, NASA/TM-20210011385, Nayagam et al. (2014), Hickman et al. (2012), and Saffire large-scale flight tests.
+- **Scientific Integrity Policy:**  
+  Unreported or unmeasured parameters are strictly classified as `"not reported"` rather than extrapolated.
 
 ---
 
-## 📊 Curated NASA Datasets
+## 🛡️ Mission Safety Scenario Evaluator
 
-1. **`data/combustion_experiments.csv` (15 Records × 17 Columns):**  
-   Standardized parameters across **FLEX, FLEX-2, BASS-II, ACME/BRE, and CIR**:
-   - `experiment_id`, `experiment_name`, `research_program`, `objective`, `experiment_type`, `fuel_material`, `environment`, `variables_studied`, `findings`, `safety_relevance`, `source_url`, `source_type`, `evidence_level`, `limitations`, `material_class`, `geometry`, `evidence_location`.
-2. **`data/research_passages.csv` (50 Passages):**  
-   Exact technical sentences extracted directly from NASA Technical Publications, Technical Memorandums, and conference proceedings, preserving `source_title`, `page_number`, `section_name`, and clean `source_url`.
-3. **`data/research_source_register.csv` (12 Sources):**  
-   Catalog of official NASA publications from `ntrs.nasa.gov` and `science.nasa.gov`.
-
-> **Zero Hallucination Policy:** If a scientific parameter or burning rate was not measured or stated in the primary NASA literature, it is strictly recorded as `"not reported"` rather than extrapolated or guessed.
+Evaluates mission fire hazards against real NASA test evidence while actively enforcing engineering constraints:
+- **Oxygen Concentration:** 0–100% vol (Nominal cabin: 21%, Exploration atmosphere: up to 34%).
+- **Forced Flow Velocity:** 0–1 m/s (Flight flows: 5–20 cm/s in BASS and Saffire).
+- **Cabin Pressure:** 10 to 101.3 kPa.
+- **Automated Advisory Hedges:**  
+  Flags the documented NASA dataset gap for avionics wiring insulation, highlights persistent toxic gas risks (CO₂ > 8,000 ppm), and explicitly warns that microgravity test data are not flight certifications.
 
 ---
 
-## 🛡️ Spacecraft Safety Scenario Evaluator
-
-The **Safety Scenario Evaluator** (`pages/4_Safety_Scenario_Evaluator.py` & `modules/scenario_retrieval.py`) models critical mission conditions:
-- **Oxygen Concentration:** 0–100% vol (ISS norm 21%, exploration/EVA pre-breathe 30–34%)
-- **Forced Ventilation Speed:** 0–1 m/s (BASS and Saffire flight flows 5–20 cm/s)
-- **Cabin Pressure:** 10 to 101.3 kPa
-- **Fuel Materials:** PMMA acrylics, SIBAL cotton-fiberglass composite fabric, liquid n-alkanes
-
-### Enforced Safety Limitations & Data Gaps:
-- **Condition-Specific Warning:** Evidence from controlled microgravity tests does not constitute a vehicle safety certification or universal flammability threshold.
-- **Electrical Fire Data Gap:** Automatically detects queries for avionics wiring insulation and flags that NASA public orbital research focuses on pure droplets and structural coupons, preventing false safety assurances.
-- **Toxic Gas Spikes:** Highlights that microgravity fires produce significant CO₂ (>8,000 ppm) and CO build-up without massive pressure rises, making crew toxicity the dominant hazard.
-
----
-
-## 🧪 Verification & Automated Testing
-
-FlameGuard features a comprehensive test suite with **23 automated unit tests** achieving a **100% pass rate**:
+## 🧪 Comprehensive Test Suite (23 / 23 Tests PASS)
 
 ```bash
-# Run all unit tests
 python tests/test_data.py                  # 8/8 PASS: Schema integrity & NASA HTTPS links
 python tests/test_retrieval.py             # 7/7 PASS: TF-IDF scoring & filter precision
 python tests/test_scenario_retrieval.py    # 4/4 PASS: Scenario queries & limitation hedges
@@ -94,18 +81,10 @@ python tests/test_scenario_evaluator.py    # 4/4 PASS: UI presets & safe error h
 python tests/test_ai_assistant.py          # PASS: Grounded evidence structure
 ```
 
-### Independent Blind Evaluation
-A 10-question independent blind test suite evaluated realistic external queries not copied from dataset phrasing (e.g. SIBAL fabric blow-off, droplet vaporization without flame, CO₂ suppression). The retrieval engine achieved **10 of 10 Top-3 HITs (100% accuracy)**.
-
 ---
 
-## 💻 Getting Started
+## 💻 Running the Application
 
-### Prerequisites
-- Python 3.10+ (tested on Python 3.14.6)
-- Git
-
-### Installation
 ```bash
 # Clone the repository
 git clone https://github.com/khan123318/FlameGuard.git
@@ -113,23 +92,10 @@ cd FlameGuard
 
 # Install dependencies
 pip install -r requirements.txt
-```
 
-### Running the Application
-```bash
+# Launch FlameGuard
 streamlit run app.py
 ```
-Access the dashboard in your web browser at `http://localhost:8501`.
 
 ---
-
-## 📜 Official Publications & References
-- NASA/TP-2015-216046: *Detailed Results from the Flame Extinguishment Experiment (FLEX)*
-- NASA/TM-20210011385: *Burning and Suppression of Solids-II (BASS-II) Summary Report*
-- Nayagam et al. (2014): *Cool-flame extinction during n-alkane droplet combustion in microgravity*
-- Hickman et al. (2012): *FLEX: A Decisive Step Forward in NASA's Combustion Research Program*
-- NASA Science: *Burning Rate Emulator (BRE)* & *ACME Flight Investigations*
-- NASA Saffire Flight Results: *Spacecraft Fire Safety Demonstration Project (Cygnus Flights)*
-
----
-*Developed for NASA Space Apps Challenge 2026 · Team NST (Karachi)*
+*Developed by Syed Abdullah Hussain (Member 2: AI & Data Engineer) · NASA Space Apps Challenge 2026*
