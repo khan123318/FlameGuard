@@ -3,7 +3,7 @@
 **Project:** FlameGuard (AI-Powered Fire Safety Research Dashboard)  
 **Event:** NASA Space Apps Challenge 2026 (Team NST, Karachi)  
 **Challenge Theme:** "Flame in Freefall: AI-Powered Fire Safety Insights from Microgravity Combustion Data"  
-**Lead AI & Data Engineer (Member 2):** Syed Abdullah Hussain (`ssyedabdullah1050`)
+**Lead AI & Data Engineer (Member 2):** Syed Abdullah Hussain (`SyedAbdullah1050`)
 
 ---
 
