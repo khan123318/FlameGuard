@@ -1,6 +1,9 @@
 
+import sys
+from pathlib import Path
 from time import perf_counter
 
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 from modules.ai_assistant import generate_research_answer
 
 
