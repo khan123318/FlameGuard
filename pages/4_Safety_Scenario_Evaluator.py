@@ -2,9 +2,9 @@
 import streamlit as st
 
 try:
-    from modules.scenario_retrieval import retrieve_for_scenario
+    from modules.scenario_evaluator import evaluate_scenario
 except ImportError:
-    from scenario_retrieval import retrieve_for_scenario
+    from scenario_evaluator import evaluate_scenario
 
 
 # ---------------------------------------------------------
@@ -412,17 +412,20 @@ if submitted:
     }
 
     try:
-        with st.spinner("Searching the research evidence database..."):
-            result = retrieve_for_scenario(scenario, top_k=5)
+        with st.spinner("Evaluating scenario and retrieving NASA research evidence..."):
+            result = evaluate_scenario(
+            scenario,
+            top_k=5
+        )
 
         st.session_state["scenario_result"] = result
         st.session_state["scenario_input"] = scenario
 
     except Exception as error:
-        st.error("The scenario retrieval process encountered an error.")
+        st.error("The scenario evaluation process encountered an error.")
         st.exception(error)
 
-
+    
 # ---------------------------------------------------------
 # DISPLAY RESULTS
 # ---------------------------------------------------------
@@ -440,15 +443,20 @@ if result is not None:
     )
     st.header("Research evidence")
 
+    # Extract evaluation results
     evidence = result.get("evidence") or []
     query = result.get("query", "")
 
-    col1, col2 = st.columns(2)
+    # -----------------------------------------------------
+    # EVALUATION METRICS
+    # -----------------------------------------------------
+
+    col1, col2, col3, col4 = st.columns(4)
 
     with col1:
         st.markdown(f"""
         <div class="metric-card">
-        <div class="metric-label">Retrieved evidence records</div>
+        <div class="metric-label">Retrieved evidence</div>
         <div class="metric-value">{len(evidence)}</div>
         </div>
         """, unsafe_allow_html=True)
@@ -456,15 +464,86 @@ if result is not None:
     with col2:
         st.markdown(f"""
         <div class="metric-card">
+        <div class="metric-label">Evidence support</div>
+        <div class="metric-value">
+        {result.get("evidence_support_score", 0):.1f}%
+        </div>
+        </div>
+        """, unsafe_allow_html=True)
+
+    with col3:
+        st.markdown(f"""
+        <div class="metric-card">
+        <div class="metric-label">Evidence gap priority</div>
+        <div class="metric-value">
+        {result.get("evidence_gap_priority", 100):.1f}%
+        </div>
+        </div>
+        """, unsafe_allow_html=True)
+
+    with col4:
+        st.markdown(f"""
+        <div class="metric-card">
         <div class="metric-label">Scenario category</div>
-        <div class="metric-value" style="font-size:1.15rem;">
+        <div class="metric-value" style="font-size:1.05rem;">
         {display_value(scenario.get("scenario_type"))}
         </div>
         </div>
         """, unsafe_allow_html=True)
 
+    # -----------------------------------------------------
+    # SCENARIO EVIDENCE ASSESSMENT
+    # -----------------------------------------------------
+
+    st.markdown("### Scenario evidence assessment")
+
+    interpretation = result.get("interpretation")
+
+    if interpretation:
+        st.info(interpretation)
+
+    score_interpretation = result.get("score_interpretation")
+
+    if score_interpretation:
+        st.caption(score_interpretation)
+
+    with st.expander("View evidence assessment details"):
+
+        summary = result.get("evidence_review_summary", {})
+
+        st.write(
+            "**Evidence found:**",
+            summary.get("evidence_found", False)
+        )
+
+        st.write(
+            "**Evidence support score:**",
+            summary.get("evidence_support_score", "Not available")
+        )
+
+        st.write(
+            "**Evidence-gap priority:**",
+            summary.get("evidence_gap_priority", "Not available")
+        )
+
+        gap_reasons = summary.get("evidence_gap_reasons", [])
+
+        if gap_reasons:
+            st.markdown("**Reasons for evidence gaps**")
+
+            for reason in gap_reasons:
+                st.warning(reason)
+
+    # -----------------------------------------------------
+    # GENERATED RESEARCH QUERY
+    # -----------------------------------------------------
+
     with st.expander("View generated research query"):
         st.code(query if query else "No searchable query was generated.")
+
+    # -----------------------------------------------------
+    # RETRIEVED EVIDENCE
+    # -----------------------------------------------------
 
     if evidence:
 
@@ -539,16 +618,19 @@ if result is not None:
                 st.info(str(passage))
 
             findings = get_field(record, "findings")
+
             if findings:
                 st.markdown("**Reported findings**")
                 st.write(findings)
 
             safety = get_field(record, "safety_relevance")
+
             if safety:
                 st.markdown("**Safety relevance**")
                 st.write(safety)
 
             limitations = get_field(record, "limitations")
+
             if limitations:
                 st.markdown("**Research limitations**")
                 st.write(limitations)

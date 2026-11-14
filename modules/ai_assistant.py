@@ -13,6 +13,11 @@ from modules.response_schema import (
 
 from modules.evidence_validator import validate_evidence
 
+from modules.prompt_templates import (
+    SYSTEM_PROMPT,
+    build_research_prompt,
+)
+
 
 def _clean(value):
     """Convert optional evidence fields into safe strings."""
@@ -29,6 +34,56 @@ def _make_source(record):
         "source_url": _clean(record.get("source_url")),
         "source_type": _clean(record.get("source_type")),
         "page_number": record.get("page_number"),
+    }
+
+
+def prepare_research_prompt(question, retrieved_evidence):
+    """
+    Prepare an evidence-grounded prompt for a future LLM integration.
+
+    Only records that pass the existing evidence validator
+    are included in the prompt.
+
+    This function does not make an external API call.
+    """
+
+    question = _clean(question)
+
+    if not question:
+        raise ValueError("A research question is required.")
+
+    if not isinstance(retrieved_evidence, list):
+        retrieved_evidence = []
+
+    normalized_records = []
+
+    for record in retrieved_evidence:
+
+        if not isinstance(record, dict):
+            continue
+
+        normalized_record = record.copy()
+
+        passage = _clean(
+            normalized_record.get("matched_passage")
+            or normalized_record.get("passage")
+        )
+
+        normalized_record["matched_passage"] = passage
+
+        normalized_records.append(normalized_record)
+
+    valid_records, _ = validate_evidence(normalized_records)
+
+    if not valid_records:
+        return None
+
+    return {
+        "system_prompt": SYSTEM_PROMPT,
+        "user_prompt": build_research_prompt(
+            question,
+            valid_records
+        ),
     }
 
 
