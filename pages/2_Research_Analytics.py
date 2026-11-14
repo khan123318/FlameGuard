@@ -13,6 +13,12 @@ from modules.analytics import (
     get_data_coverage,
 )
 
+from modules.retrieval_engine import retrieve_research
+
+from modules.ranking_engine import (
+    rank_evidence,
+    rank_experiments,
+)
 
 st.set_page_config(
     page_title="FlameGuard | Research Analytics",
@@ -382,6 +388,215 @@ if available_categories:
         st.info("No reported values are available for this research dimension.")
 else:
     st.info("No supported research-category columns were found.")
+
+
+
+# ---------------------------------------------------------
+# QUERY-BASED RESEARCH RANKING
+# ---------------------------------------------------------
+
+st.markdown(
+    '<div class="section-heading">Query-Based Research Ranking</div>',
+    unsafe_allow_html=True
+)
+
+st.markdown(
+    '<div class="section-caption">'
+    'Search NASA combustion research and identify the most relevant '
+    'experiments, with traceable supporting passages.'
+    '</div>',
+    unsafe_allow_html=True
+)
+
+st.markdown("""
+<div class="note-panel">
+Enter a scientific research question to retrieve and rank relevant
+research. Scores are heuristic research-ranking indicators, not
+scientific certainty, physical fire risk, or safety assessments.
+</div>
+""", unsafe_allow_html=True)
+
+with st.form("research_ranking_form"):
+    research_query = st.text_input(
+        "Research question",
+        placeholder="e.g. How does oxygen concentration affect flame extinction in microgravity?"
+    )
+
+    submitted = st.form_submit_button(
+        "Search and Rank Experiments",
+        use_container_width=True
+    )
+
+current_filtered_ids = sorted(
+    filtered_df["experiment_id"].astype(str).unique().tolist()
+)
+
+if submitted:
+    if not research_query.strip():
+        st.warning("Please enter a research question.")
+
+    else:
+        try:
+            with st.spinner("Searching NASA research passages..."):
+
+                # Retrieve relevant passages from the research corpus.
+                retrieved_records = retrieve_research(
+                    research_query.strip(),
+                    top_k=50
+                )
+
+                # Respect the research-program and evidence-level filters.
+                retrieved_records = [
+                    record
+                    for record in retrieved_records
+                    if str(record.get("experiment_id"))
+                    in current_filtered_ids
+                ]
+
+                # Rank individual research passages.
+                ranked_passages = rank_evidence(retrieved_records)
+
+                # Group and rank distinct experiments.
+                experiment_results = rank_experiments(ranked_passages)
+
+                st.session_state["analytics_ranked_experiments"] = (
+                    experiment_results
+                )
+
+                st.session_state["analytics_ranking_query"] = (
+                    research_query.strip()
+                )
+
+                st.session_state["analytics_ranking_filter_ids"] = (
+                    current_filtered_ids
+                )
+
+        except Exception as error:
+            st.error("Research ranking could not be completed.")
+            st.exception(error)
+
+
+# Display the latest results if they belong to the current filters.
+saved_results = st.session_state.get(
+    "analytics_ranked_experiments"
+)
+
+saved_filter_ids = st.session_state.get(
+    "analytics_ranking_filter_ids"
+)
+
+if saved_results is not None:
+
+    if saved_filter_ids != current_filtered_ids:
+        st.info(
+            "The dataset filters have changed. Run the search again "
+            "to generate rankings for the selected records."
+        )
+
+    elif not saved_results:
+        st.warning(
+            "No relevant research passages were found for this query "
+            "within the selected filters."
+        )
+
+    else:
+        st.markdown("**Experiment ranking results**")
+
+        st.caption(
+            f"Search query: {st.session_state['analytics_ranking_query']}"
+        )
+
+        ranking_table = pd.DataFrame([
+            {
+                "Experiment": item["experiment_name"],
+                "Experiment ID": item["experiment_id"],
+                "Supporting passages": item["passage_count"],
+                "Relevance": item["relevance_component_score"],
+                "Evidence strength": item["evidence_strength_score"],
+                "Completeness": item["completeness_score"],
+                "Overall score": item["overall_score"],
+            }
+            for item in saved_results
+        ])
+
+        st.dataframe(
+            ranking_table,
+            hide_index=True,
+            use_container_width=True
+        )
+
+        st.markdown("**Explore supporting research**")
+
+        for index, experiment in enumerate(saved_results, start=1):
+
+            with st.expander(
+                f"{index}. {experiment['experiment_name']} "
+                f"— Score: {experiment['overall_score']:.2f}"
+            ):
+
+                col1, col2, col3 = st.columns(3)
+
+                col1.metric(
+                    "Relevance",
+                    f"{experiment['relevance_component_score']:.2f}"
+                )
+
+                col2.metric(
+                    "Evidence strength",
+                    f"{experiment['evidence_strength_score']:.2f}"
+                )
+
+                col3.metric(
+                    "Completeness",
+                    f"{experiment['completeness_score']:.2f}"
+                )
+
+                st.caption(
+                    f"Experiment ID: {experiment['experiment_id']} | "
+                    f"Supporting passages: {experiment['passage_count']}"
+                )
+
+                st.markdown("**Ranking explanation**")
+
+                for reason in experiment["ranking_reasons"]:
+                    st.write(f"• {reason}")
+
+                st.markdown("**Supporting NASA research passages**")
+
+                for passage_number, passage in enumerate(
+                    experiment["supporting_passages"],
+                    start=1
+                ):
+
+                    st.markdown(
+                        f"**Passage {passage_number}: "
+                        f"{passage.get('passage_id', 'Not available')}**"
+                    )
+
+                    st.write(
+                        passage.get(
+                            "matched_passage",
+                            "Passage text unavailable."
+                        )
+                    )
+
+                    st.caption(
+                        f"Source: {passage.get('source_title', 'Not reported')} "
+                        f"| Page: {passage.get('page_number', 'Not reported')} "
+                        f"| Section: {passage.get('section_name', 'Not reported')}"
+                    )
+
+                    source_url = passage.get("source_url")
+
+                    if (
+                        isinstance(source_url, str)
+                        and source_url.startswith("https://")
+                    ):
+                        st.markdown(
+                            f"[Open NASA source]({source_url})"
+                        )
+
+                    st.divider()
 
 
 # ---------------------------------------------------------
