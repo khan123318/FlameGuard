@@ -12,13 +12,15 @@ st.set_page_config(
 # Heading and overview
 st.title("Spacecraft Fire Safety Scenario Evaluator")
 st.write(
-    "Evaluate mission fire scenarios against empirical NASA microgravity combustion research. "
-    "This tool extracts relevant experiment evidence and highlights critical engineering limitations."
+    "Evaluate spacecraft mission fire scenarios against empirical NASA microgravity combustion research "
+    "(FLEX, BASS-II, ACME/BRE, and Saffire). This tool maps operational parameters to experimental findings "
+    "and enforces critical spaceflight safety limitations."
 )
 
 st.info(
-    "**NASA Safety Notice:** Microgravity combustion data in this tool are condition-specific research "
-    "observations from ISS experiments. They do not constitute official safety certifications or universal thresholds."
+    "**NASA Spaceflight Safety Disclaimer:** Combustion data in FlameGuard represent condition-specific scientific "
+    "observations from controlled space station facilities (CIR, MSG, Cygnus). They do not constitute vehicle design "
+    "certifications or universal flammability thresholds."
 )
 
 st.divider()
@@ -27,40 +29,49 @@ st.divider()
 st.subheader("1. Configure Mission Fire Scenario")
 
 preset_choice = st.selectbox(
-    "Choose a preset scenario or configure custom parameters:",
+    "Select an empirical NASA mission scenario or configure custom parameters:",
     [
         "Custom Scenario",
-        "Scenario A: Electrical Equipment Overheating (Avionics / Wiring)",
-        "Scenario B: Solid Polymer Flame Spread (PMMA in opposed ventilation)",
-        "Scenario C: Textile Composite Flammability (SIBAL Fabric under varied O2)",
+        "Scenario 1: Solid Polymer Flame Spread (PMMA in opposed flow duct - BASS-II)",
+        "Scenario 2: Composite Fabric Extinction (SIBAL cotton/fiberglass - BASS-II / Saffire)",
+        "Scenario 3: Electrical Equipment Overheating (Avionics / Wiring Insulation)",
+        "Scenario 4: Large-Scale Structural Burn (Saffire Cygnus Material Test)",
     ]
 )
 
-# Preset values
-if preset_choice == "Scenario A: Electrical Equipment Overheating (Avionics / Wiring)":
-    default_type = "Electrical equipment fire"
-    default_material = "Wiring insulation"
-    default_desc = "Overheating wiring insulation in habitable compartment under low air circulation"
-    default_o2 = 21.0
-    default_vel = 0.05
-    default_temp = 350.0
-    default_press = 101325.0
-elif preset_choice == "Scenario B: Solid Polymer Flame Spread (PMMA in opposed ventilation)":
+# Preset values based on Faraz's engineering package and NASA datasets
+if preset_choice == "Scenario 1: Solid Polymer Flame Spread (PMMA in opposed flow duct - BASS-II)":
     default_type = "Solid material flame spread"
     default_material = "PMMA"
-    default_desc = "Flame spread over plastic sample in opposed ventilation inside glovebox duct"
+    default_desc = "Cast acrylic PMMA sheet combustion under controlled opposed air ventilation inside Microgravity Science Glovebox"
     default_o2 = 21.0
-    default_vel = 0.10
+    default_vel = 0.05
     default_temp = 298.0
     default_press = 101325.0
-elif preset_choice == "Scenario C: Textile Composite Flammability (SIBAL Fabric under varied O2)":
+elif preset_choice == "Scenario 2: Composite Fabric Extinction (SIBAL cotton/fiberglass - BASS-II / Saffire)":
     default_type = "Solid material flame spread"
     default_material = "SIBAL fabric"
-    default_desc = "Combustion and blow-off extinction behavior of cotton-fiberglass blend in concurrent flow"
-    default_o2 = 18.0
-    default_vel = 0.20
+    default_desc = "Cotton-fiberglass blend (75/25) burning under concurrent airflow to study quenched vs blow-off extinction"
+    default_o2 = 18.7
+    default_vel = 0.15
     default_temp = 298.0
     default_press = 101325.0
+elif preset_choice == "Scenario 3: Electrical Equipment Overheating (Avionics / Wiring Insulation)":
+    default_type = "Electrical equipment fire"
+    default_material = "Wiring insulation"
+    default_desc = "Overheating wire harness and polymer jacketing inside pressurized habitable avionics rack under low air movement"
+    default_o2 = 21.0
+    default_vel = 0.02
+    default_temp = 360.0
+    default_press = 101325.0
+elif preset_choice == "Scenario 4: Large-Scale Structural Burn (Saffire Cygnus Material Test)":
+    default_type = "Solid material flame spread"
+    default_material = "PMMA sheet"
+    default_desc = "Large scale coupon combustion in Cygnus module at reduced pressure and elevated oxygen"
+    default_o2 = 28.0
+    default_vel = 0.20
+    default_temp = 298.0
+    default_press = 55000.0
 else:
     default_type = "Solid material flame spread"
     default_material = ""
@@ -81,51 +92,55 @@ with col1:
             "Liquid droplet fire hazard",
             "Gaseous burner surrogate",
         ],
-        index=0 if "Solid" in default_type else 1
+        index=0 if "Solid" in default_type else (1 if "Electrical" in default_type else 2)
     )
     fuel_or_material = st.text_input(
         "Fuel or Material Name",
         value=default_material,
-        placeholder="e.g. PMMA, SIBAL fabric, n-heptane"
+        placeholder="e.g. PMMA, SIBAL fabric, Nomex, Methanol"
     )
     description = st.text_area(
-        "Scenario Description",
+        "Scenario Description & Geometry",
         value=default_desc,
-        placeholder="Describe the environment, ventilation, orientation, or ignition source..."
+        placeholder="Describe the environment, sample geometry, flow orientation, or ignition conditions..."
     )
 
 with col2:
-    st.write("**Atmospheric and Ventilation Conditions:**")
+    st.write("**Spacecraft Environmental & Atmospheric Parameters:**")
     c_a, c_b = st.columns(2)
     with c_a:
         oxygen_percent = st.number_input(
-            "Oxygen Concentration (%)",
+            "Oxygen Concentration (% vol)",
             min_value=0.0,
             max_value=100.0,
             value=float(default_o2),
-            step=0.5
+            step=0.5,
+            help="Normal spacecraft cabin: 21% O2. Exploration/EVA pre-breathe: up to 30-34% O2."
         )
         temperature_k = st.number_input(
             "Ambient Temperature (K)",
             min_value=100.0,
             max_value=1000.0,
             value=float(default_temp),
-            step=1.0
+            step=1.0,
+            help="Nominal cabin: ~293-298 K (20-25 C)."
         )
     with c_b:
         air_velocity_m_s = st.number_input(
-            "Airflow Speed (m/s)",
+            "Forced Airflow Speed (m/s)",
             min_value=0.0,
-            max_value=10.0,
+            max_value=1.0,
             value=float(default_vel),
-            step=0.01
+            step=0.01,
+            help="Typical spacecraft cabin ventilation: 0.05 to 0.20 m/s (5 to 20 cm/s)."
         )
         pressure_pa = st.number_input(
-            "Ambient Pressure (Pa)",
+            "Cabin Pressure (Pa)",
             min_value=10000.0,
             max_value=300000.0,
             value=float(default_press),
-            step=1000.0
+            step=1000.0,
+            help="Nominal ISS cabin: 101,325 Pa (1 atm). Depressurized test: ~55,000 Pa."
         )
 
 # Evaluation trigger
@@ -143,7 +158,6 @@ if st.button("Evaluate Scenario Against NASA Research", type="primary"):
     result = retrieve_for_scenario(scenario_dict, top_k=5)
     evidence = result.get("evidence", [])
     limitations = result.get("limitations", [])
-    query = result.get("query", "")
 
     st.divider()
     st.subheader("2. Evaluation Limitations & Safety Constraints")
@@ -154,7 +168,22 @@ if st.button("Evaluate Scenario Against NASA Research", type="primary"):
             if "electrical" in lim.lower() or "no retrieved evidence" in lim.lower():
                 st.warning(f"⚠️ **Data Gap:** {lim}")
             else:
-                st.info(f"ℹ️ **Safety Hedge:** {lim}")
+                st.info(f"ℹ️ **Safety Constraint:** {lim}")
+
+    # Faraz's engineering safety implications
+    with st.expander("🔬 **Spacecraft Engineering & Toxicological Assessment Notes**", expanded=True):
+        st.markdown(
+            "- **Convective Airflow Dependency:** In microgravity, absence of buoyant convection means flames rely entirely "
+            "on forced ventilation fans. Dim, blue flames can persist at low velocities (< 1 cm/s) and suddenly intensify upon airflow increase."
+        )
+        st.markdown(
+            "- **Toxic Gas Hazard (CO/CO2):** Large-scale flight tests indicate microgravity fires produce significant CO2 spikes "
+            "(often > 8,000 ppm) and carbon monoxide without rapid overpressure, making crew asphyxiation and toxic gas buildup a primary mission risk."
+        )
+        st.markdown(
+            "- **Smoke Detection Dynamics:** Smoke particulates linger in spherical clusters without thermal plumes, causing delayed "
+            "sensor response in ionization detectors compared to 1-g environments."
+        )
 
     st.subheader(f"3. Retrieved NASA Research Evidence ({len(evidence)} matches)")
 
