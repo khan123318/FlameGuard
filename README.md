@@ -376,9 +376,15 @@ These are future-development directions, not claims that the work is already com
 ---
 
 ## License
+## 📄 License
 
-No license information was present in the supplied project materials. Add a `LICENSE` file and update this section before describing the repository as open source. Until then, the project's reuse and redistribution terms are not specified.
+This project is licensed under the **MIT License**.
 
+You are free to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the software, subject to the conditions of the MIT License.
+
+The MIT License requires that the original copyright notice and permission notice be included in all copies or substantial portions of the software.
+
+**Note:** FlameGuard is an educational and research-oriented project developed for the NASA Space Apps Challenge 2026. Its outputs are intended for research and informational purposes and should not be treated as certified spacecraft fire-safety recommendations.
 ---
 
 ## Project Links
