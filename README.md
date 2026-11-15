@@ -78,7 +78,7 @@ Test files cover the data layer (`test_data.py`, 8 tests), retrieval (`test_retr
 - **Coverage gaps.** Missing data stays missing, and some materials or conditions have no comparable experiment (for example, wiring and electrical fires).
 - Mission-level safety decisions need qualified engineering analysis.
 
-## Team NST X (Virtual)
+## Team X NST  (Virtual)
 
 | Member | Contribution |
 |---|---|
