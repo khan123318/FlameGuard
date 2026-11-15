@@ -17,7 +17,6 @@
 - [Scientific Data and Sources](#scientific-data-and-sources)
 - [Application Areas](#application-areas)
 - [Technology](#technology)
-- [Repository Structure](#repository-structure)
 - [Getting Started](#getting-started)
 - [Using FlameGuard](#using-flameguard)
 - [Quality Assurance](#quality-assurance)
@@ -211,63 +210,6 @@ The exact UI framework and dependency versions should be taken from the current 
 
 ---
 
-## Repository Structure
-
-The following is a **logical overview of documented project components**, not a guarantee that every path is present in every branch:
-
-```text
-FlameGuard/
-├── app.py
-├── requirements.txt
-├── README.md
-├── .gitignore
-├── .env.example
-│
-├── data/
-│   ├── combustion_experiments.csv
-│   ├── experimental_measurements.csv
-│   ├── research_passages.csv
-│   └── research_source_register.csv
-│
-├── modules/
-│   ├── data_loader.py
-│   ├── retrieval_engine.py
-│   ├── ranking_engine.py
-│   ├── experiment_comparison.py
-│   ├── ai_assistant.py
-│   ├── prompt_templates.py
-│   ├── response_schema.py
-│   ├── evidence_validator.py
-│   ├── analytics.py
-│   └── scenario_evaluator.py
-│
-├── pages/
-│   ├── 1_Experiment_Explorer.py
-│   ├── 2_Research_Analytics.py
-│   ├── 3_AI_Research_Assistant.py
-│   └── 4_Safety_Scenario_Evaluator.py
-│
-├── research/
-│   ├── materials_research.md
-│   ├── combustion_physics.md
-│   ├── experimental_data.md
-│   └── spacecraft_safety.md
-│
-├── tests/
-│   ├── test_retrieval.py
-│   ├── test_ai_assistant.py
-│   ├── test_data.py
-│   └── test_scenario_evaluator.py
-│
-└── assets/
-    ├── logo.png
-    └── images/
-```
-
-This layout is based on the project-structure screenshots supplied with the project materials. File availability can differ by branch; verify the checked-out branch before publishing, and remove any entries that are not committed.
-
----
-
 ## Getting Started
 
 ### Prerequisites
@@ -383,12 +325,16 @@ FlameGuard should be used to find and organize evidence, expose limitations, and
 
 ## Team
 
-**Team NST — Karachi, Pakistan**
+**Team NST X — Karachi, Pakistan**
 
-| Team member | Project role |
+| Team member |
 |---|---|
-| **Waheeba Khan** | Team Lead (Member 1) |
-| **Syed Abdullah Hussain** | AI and Data Engineer (Member 2) |
+| **Waheeba Khan** |
+| **Syed Abdullah Hussain** |
+| **Faraz Ur Rehman** |
+| **Farhan Rana** |
+| **Amna Bibi** |
+| **Talha Ahmed** |
 
 The project was developed collaboratively. The table lists the members and roles explicitly identified in the available engineering handoff; add the remaining team members and their approved roles here before public release.
 
@@ -410,7 +356,7 @@ The handoff records 13 commits and more than 1,350 lines of production code and 
 
 - **NASA** and the **NASA Space Apps Challenge** for the challenge and publicly available scientific resources.
 - NASA researchers and mission teams whose published work on microgravity combustion makes evidence-based exploration possible.
-- **Team NST** for project development and collaboration.
+- **Team NST X** for project development and collaboration.
 
 ## Project Status and Roadmap
 
