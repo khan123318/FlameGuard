@@ -342,6 +342,7 @@ if available_categories:
             )
             fig.update_traces(
                 textposition="outside",
+                cliponaxis=False,
                 marker_line_width=0
             )
             fig.update_layout(
@@ -626,7 +627,8 @@ if not evidence_data.empty:
             color_continuous_scale=["#24516b", "#39d5e5"],
             title="Records by evidence type"
         )
-        evidence_fig.update_traces(textposition="outside")
+        evidence_fig.update_traces(textposition="outside",
+                cliponaxis=False)
         evidence_fig.update_layout(
             template="plotly_dark",
             paper_bgcolor="rgba(0,0,0,0)",
@@ -689,7 +691,8 @@ if not findings_data.empty:
         ],
         title="Documented findings status"
     )
-    findings_fig.update_traces(textposition="outside")
+    findings_fig.update_traces(textposition="outside",
+                cliponaxis=False)
     findings_fig.update_layout(
         template="plotly_dark",
         paper_bgcolor="rgba(0,0,0,0)",
@@ -781,7 +784,8 @@ if not coverage.empty:
         )
         percentage_fig.update_traces(
             texttemplate="%{text:.1f}%",
-            textposition="outside"
+            textposition="outside",
+                cliponaxis=False
         )
         percentage_fig.update_layout(
             template="plotly_dark",
@@ -790,10 +794,10 @@ if not coverage.empty:
             font_color="#dceaf5",
             coloraxis_showscale=False,
             title_font_size=16,
-            margin=dict(l=10, r=35, t=55, b=20),
+            margin=dict(l=10, r=60, t=55, b=20),
             xaxis_title="Coverage (%)",
             yaxis_title="",
-            xaxis_range=[0, 110]
+            xaxis_range=[0, 125]
         )
         st.plotly_chart(percentage_fig, use_container_width=True)
 
