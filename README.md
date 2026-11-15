@@ -2,7 +2,7 @@
 ### AI-Powered Spacecraft Fire Safety Insights from Microgravity Combustion Data
 
 
-**FlameGuard** is a research-oriented decision-support prototype developed by **Team NST (Karachi)** for the NASA Space Apps Challenge 2026 challenge theme **“Flame in Freefall: Microgravity Combustion Data.”** It brings together curated microgravity-combustion experiment data, traceable NASA research passages, text-based evidence retrieval, experiment analytics, and scenario-based evidence review to help users explore what published research says about fire behaviour in spacecraft-relevant environments.
+**FlameGuard** is a research-oriented decision-support prototype developed by **Team NST (Karachi)** for the NASA Space Apps Challenge 2026 challenge theme **“Flame in Freefall”** It brings together curated microgravity-combustion experiment data, traceable NASA research passages, text-based evidence retrieval, experiment analytics, and scenario-based evidence review to help users explore what published research says about fire behaviour in spacecraft-relevant environments.
 
 > **Important scientific scope:** FlameGuard is an evidence-discovery and research-support tool. It does not simulate combustion, certify spacecraft fire safety, or calculate a validated probability of ignition, flame spread, or crew risk. Scenario results should be interpreted as research evidence and evidence gaps requiring expert review—not as physical fire-hazard predictions.
 
