@@ -1,4 +1,4 @@
-# FlameGuard 🔥
+# FlameGuard 
 
 ### Evidence discovery for spacecraft fire-safety research, built on NASA microgravity combustion data
 
