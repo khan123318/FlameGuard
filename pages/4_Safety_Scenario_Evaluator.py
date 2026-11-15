@@ -299,7 +299,7 @@ st.write(
     "to investigate. Environmental parameters are optional."
 )
 
-with st.form("scenario_form"):
+with st.container():
 
     st.markdown("#### Scenario information")
 
@@ -389,7 +389,7 @@ with st.form("scenario_form"):
 
     st.divider()
 
-    submitted = st.form_submit_button(
+    submitted = st.button(
         "Retrieve Relevant Research",
         use_container_width=True
     )

@@ -442,7 +442,8 @@ with st.form("experiment_search_form"):
     with col3:
         selected_environment = st.selectbox(
             "Environment",
-            get_options(df, "environment")
+            get_options(df, "environment"),
+            format_func=lambda v: v if len(str(v)) <= 60 else str(v)[:57] + "..."
         )
 
     search_submitted = st.form_submit_button(
